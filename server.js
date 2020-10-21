@@ -9,6 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "hbs");
 
+// rewrite previous rendering technique
+
 app.get("/", (request, response) => {
   db.getAllPersons()
     .then((persons) => {
@@ -25,7 +27,15 @@ app.get("/add", (req, res) => {
   res.render("persons_add");
 });
 
-app.post("/add", (req, res) => {});
+app.post("/add", (req, res) => {
+  db.addNewPerson(req.body.name, req.body.age, req.body.city)
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch(() => {
+      res.send(err);
+    });
+});
 
 app.listen(4444, () => {
   console.log("hwllo");
